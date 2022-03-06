@@ -1,15 +1,12 @@
 import './App.css';
-import Caver from 'caver-js';
-
-const caver = new Caver('https://kaikas.baobab.klaytn.net:8651/');
-
-console.log(caver);
-
+import { useContext } from "react"
+import { Context } from "./context/Context";
 
 function App() {
-  return (
+    const { currentAccount, connectWallet} = useContext(Context);
+    return (
     <div className="App">
-      hello
+      <div onClick={() => connectWallet()}>CONNECT WALLET</div>
     </div>
   );
 }

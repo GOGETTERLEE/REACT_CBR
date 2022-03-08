@@ -16,9 +16,10 @@ const createStakingContract = () => {
 
 
 export const Provider = ({ children }) => {
+    console.log("provider")
     const [currentAccount, setCurrentAccount] = useState("")
-    const [genInfo, setGenInfo] = useState()
-    const [indInfo, setIndInfo] = useState()
+    const [genInfo, setGenInfo] = useState({})
+    const [indInfo, setIndInfo] = useState({})
 
     const connectWallet = async () => {
         try {
@@ -34,7 +35,7 @@ export const Provider = ({ children }) => {
             if(!window.klaytn) return alert('Please install Kaikas')
             const stakingContract = createStakingContract();
             const [_currentRate, _realTimeIndex, _realTimeRound, _realTimeTVL] = await stakingContract.methods.getFrontGenInfo().call(); 
-            const GenInfo = {currentRate : _currentRate, realTimeIndex : _realTimeIndex, realTimeRound : _realTimeRound, realTimeTVL : _realTimeTVL}
+            const GenInfo = {currentRate : _currentRate, realTimeIndex : _realTimeIndex, realTimeRound : _realTimeRound, realTimeTVL : _realTimeTVL};
             console.log(GenInfo)
             setGenInfo(GenInfo);
         } catch(error) {
@@ -47,8 +48,8 @@ export const Provider = ({ children }) => {
             const stakingContract = createStakingContract();
             const [_lastUpdateBalance, _realTimeIndRound, _realTimeBalance] = await stakingContract.methods.getFrontIndInfo().call({from:window.klaytn.selectedAddress}); 
             const IndInfo = {lastUpdateBalance : _lastUpdateBalance, realTimeIndRound : _realTimeIndRound, realTimeBalance : _realTimeBalance};
-            console.log(IndInfo)
             setIndInfo(IndInfo);
+            console.log(indInfo)
         } catch(error) {
             console.log(error)
         }

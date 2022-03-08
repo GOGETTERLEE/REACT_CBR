@@ -13,6 +13,15 @@
     display: flex;
     justify-content: space-between;
   }
+  .tvl2{
+      font-size:30px;
+  }
+  .tvll{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom:20px;
+  }
   .myroundl{
     display: flex;
     flex-direction: column;

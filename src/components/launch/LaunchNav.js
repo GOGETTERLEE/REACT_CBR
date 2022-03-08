@@ -1,25 +1,20 @@
 import React, {useEffect} from 'react'
 import { Link } from 'react-router-dom'
 import './LaunchNavStyle.css'
-import {Context} from '../context/Context'
+import {Context} from '../../context/Context'
 
 
 const LaunchNav = () => {
   const [menu, setMenu] = React.useState("stake")
   const {connectWallet, currentAccount} = React.useContext(Context)
- 
   const [userName, setUserName] = React.useState()
 
 
   useEffect(() => {
     if (currentAccount) {
-      
-        
           setUserName(
             `${currentAccount.slice(0, 7)}...${currentAccount.slice(38)}`,
           )
-      
-    
   }}, [currentAccount])
   
   return (

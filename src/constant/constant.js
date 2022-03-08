@@ -6,7 +6,7 @@
     git remote add origin
     (git remote remove origin)
     git push origin master
-    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
+    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
 */
 export const stakingContractAddress = '0xc9aE641314362e4541A9C5164b14B9c88e3e0C61'
 export const stakingContractABI = [

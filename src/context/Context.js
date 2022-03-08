@@ -44,7 +44,7 @@ export const Provider = ({ children }) => {
         try{
             if(!window.klaytn) return alert('Please install Kaikas')
             const stakingContract = createStakingContract();
-            const IndInfo = await stakingContract.methods.getFrontIndInfo().call({from:currentAccount}); 
+            const IndInfo = await stakingContract.methods.getFrontIndInfo().call({from:window.klaytn.selectedAddress}); 
             console.log(IndInfo)
             setIndInfo(IndInfo);
         } catch(error) {
@@ -57,7 +57,6 @@ export const Provider = ({ children }) => {
             if(window.klaytn.selectedAddress) {
                 const accounts = await window.klaytn.enable()
                 setCurrentAccount(accounts[0]);
-                console.log(currentAccount)
             }
             else console.log("No accounts found")
         } catch(error) {
@@ -83,11 +82,3 @@ export const Provider = ({ children }) => {
         </Context.Provider>
       );
 };
-
-    
-    
-//const account = provider.selectedAddress
-   // const tx = await contract.methods.deposit(100).send({from:account, gas: 5000000});
-
-
-

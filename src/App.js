@@ -1,18 +1,20 @@
-import './App.css';
-import { useContext} from "react"
-import { Context } from "./context/Context";
+
+import React from 'react'
+import { Routes, Route } from 'react-router-dom'
+import Home from './routes/Home'
+import Launch from './routes/Launch'
+import {Provider} from './context/Context'
+
 
 function App() {
-
-    const { currentAccount, connectWallet, genInfo, indInfo, getGenInfo, getIndInfo} = useContext(Context);
  
-    return (
-    <div className="App">
-      <div onClick={() => connectWallet()}>connect wallet</div>  
-      <div onClick={() => connectWallet()}>{currentAccount}</div>
-      <div> asd {indInfo} </div>
-    </div>
-  );
-}
-
-export default App;
+  return (
+      <Provider>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/Launch/*' element={<Launch />} />
+      </Routes>
+      </Provider>
+      
+  )
+}export default App;

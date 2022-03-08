@@ -33,7 +33,8 @@ export const Provider = ({ children }) => {
         try{
             if(!window.klaytn) return alert('Please install Kaikas')
             const stakingContract = createStakingContract();
-            const GenInfo = await stakingContract.methods.getFrontGenInfo().call(); 
+            const [_currentRate, _realTimeIndex, _realTimeRound, _realTimeTVL] = await stakingContract.methods.getFrontGenInfo().call(); 
+            const GenInfo = {currentRate : _currentRate, realTimeIndex : _realTimeIndex, realTimeRound : _realTimeRound, realTimeTVL : _realTimeTVL}
             console.log(GenInfo)
             setGenInfo(GenInfo);
         } catch(error) {
@@ -44,7 +45,8 @@ export const Provider = ({ children }) => {
         try{
             if(!window.klaytn) return alert('Please install Kaikas')
             const stakingContract = createStakingContract();
-            const IndInfo = await stakingContract.methods.getFrontIndInfo().call({from:window.klaytn.selectedAddress}); 
+            const [_lastUpdateBalance, _realTimeIndRound, _realTimeBalance] = await stakingContract.methods.getFrontIndInfo().call({from:window.klaytn.selectedAddress}); 
+            const IndInfo = {lastUpdateBalance : _lastUpdateBalance, realTimeIndRound : _realTimeIndRound, realTimeBalance : _realTimeBalance};
             console.log(IndInfo)
             setIndInfo(IndInfo);
         } catch(error) {

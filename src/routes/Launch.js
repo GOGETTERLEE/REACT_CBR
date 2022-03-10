@@ -12,7 +12,7 @@ const Launch = () => {
     <div className="appmain">
       <LaunchNav/>
       <Routes>
-          <Route path='Stake' element={<Stake/>} />
+          <Route path='Stake/*' element={<Stake/>} />
           <Route path='Bond' element={<Bond/>} />
           <Route path='Borrow' element={<Borrow/>} />
           <Route path='Deposit' element={<Deposit/>} />

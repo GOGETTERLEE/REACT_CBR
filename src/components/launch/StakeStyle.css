@@ -9,13 +9,14 @@
     flex-direction: column;
     justify-content: space-around;
   }
-  .myround ul{
+  .roundbox ul{
     display: flex;
     justify-content: space-between;
   }
   .tvl2{
       font-size:30px;
   }
+
   .tvll{
     display: flex;
     flex-direction: column;
@@ -50,9 +51,15 @@
     background-color:black;
     border-radius: 50%;
   }
+  .nonactive{
+    cursor: pointer;
+  }
   .btw{
     flex-basis: 5%;
     padding-bottom: 45%
+  }
+  .rateapybox{
+      padding:0 10%;
   }
   .round{
     width: 200px;
@@ -60,7 +67,12 @@
   }
   .myround{
     flex-basis:45%;
-    
+  }
+  .stakeoption li{
+    cursor: pointer;
+  }
+  .tvlbox{
+      flex-basis:45%;
   }
   .roundbox{
     display: flex;
@@ -72,7 +84,7 @@
     border-radius: 10px 10px 0 0;
     border: 1px solid #777;
     margin-top: 20px;
-    padding:5% 10%;
+    padding:10px 40px;
   }
   .info h1{
     font-size:1.5rem;
@@ -134,9 +146,9 @@
   }
   .btn-round{
     margin: 10px 0;
-    border-radius: 20px;
+    border-radius: 13px;
     text-align: center;
-    padding: 12px 32px;
+    padding: 6.5px 32px;
     font-size: 1.2rem;
     text-transform: uppercase;
     background: transparent;
@@ -147,12 +159,35 @@
   .btn-round:hover {
     background: rgba(255,255,255, .2);
   }
+  .inputandall{
+      display:flex;
+      justify-content: space-between;
+  }
   .input{
-    width:100%;
+    flex-basis:87%;
     background:#ffffff;
     border:0;
     height:30px;
     border-radius: 20px;
+    padding-left: 10px;
+  }
+  .inputandall{
+      margin-bottom:20px;
+  }
+  .allbtn{
+      flex-basis:10%;
+    border-radius: 20px;
+    text-align: center;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    background: transparent;
+    color: #fff;
+    border: 1px solid #fff;
+    cursor: pointer;
+  }
+  .allbtn:hover {
+    background: rgba(255,255,255, .2);
   }
   input::placeholder {
     color: rgb(95, 95, 95);

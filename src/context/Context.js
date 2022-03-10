@@ -1,6 +1,6 @@
 import React, {useEffect, useState } from 'react';
 import Caver from 'caver-js';
-import { stakingContractABI, stakingContractAddress } from "../constant/constant";
+import { stakingContractABI, stakingContractAddress, tokenContractABI, tokenContractAddress } from "../constant/constant";
 export const Context = React.createContext();
 
 
@@ -13,6 +13,10 @@ const createStakingContract = () => {
     const stakingContract = new caver.klay.Contract(stakingContractABI, stakingContractAddress)
     return stakingContract;
 }
+const createTokenContract = () => {
+    const tokenContract = new caver.klay.Contract(tokenContractABI, tokenContractAddress)
+    return tokenContract;
+}
 
 
 export const Provider = ({ children }) => {
@@ -20,6 +24,14 @@ export const Provider = ({ children }) => {
     const [currentAccount, setCurrentAccount] = useState("")
     const [genInfo, setGenInfo] = useState({})
     const [indInfo, setIndInfo] = useState({})
+    const [myBalance, setMyBalance] = useState()
+    const [stakeAmount, setStakeAmount] = useState()
+    const [myRealBalance, setMyRealBalance] = useState()
+
+
+    const onChangeStakeAmount = (e) => {
+        setStakeAmount(e.target.value);
+      };
 
     const connectWallet = async () => {
         try {
@@ -30,26 +42,29 @@ export const Provider = ({ children }) => {
           console.log(error)
         }
       }
+
     const getGenInfo = async () => {
         try{
             if(!window.klaytn) return alert('Please install Kaikas')
             const stakingContract = createStakingContract();
-            const [_currentRate, _realTimeIndex, _realTimeRound, _realTimeTVL] = await stakingContract.methods.getFrontGenInfo().call(); 
-            const GenInfo = {currentRate : _currentRate, realTimeIndex : _realTimeIndex, realTimeRound : _realTimeRound, realTimeTVL : _realTimeTVL};
+            const [_realTimeRound, _realTimeTVL,  _realTimeIndex, _currentRate ] = await stakingContract.methods.getFrontGenInfo().call(); 
+            const GenInfo = {currentRate : (_currentRate - 10000000000)/100000000 , currentAPY: (Math.pow((_currentRate/10000000000), 365) * 100).toFixed(4) , realTimeIndex : _realTimeIndex, realTimeRound : _realTimeRound, realTimeTVL : parseFloat(caver.utils.convertFromPeb(caver.utils.toBN(_realTimeTVL))).toFixed(4)};
             console.log(GenInfo)
             setGenInfo(GenInfo);
         } catch(error) {
             console.log(error)
         }
     } 
+    
     const getIndInfo = async () => {
         try{
             if(!window.klaytn) return alert('Please install Kaikas')
             const stakingContract = createStakingContract();
             const [_lastUpdateBalance, _realTimeIndRound, _realTimeBalance] = await stakingContract.methods.getFrontIndInfo().call({from:window.klaytn.selectedAddress}); 
-            const IndInfo = {lastUpdateBalance : _lastUpdateBalance, realTimeIndRound : _realTimeIndRound, realTimeBalance : _realTimeBalance};
+            const IndInfo = {lastUpdateBalance : parseFloat(caver.utils.convertFromPeb(caver.utils.toBN(_lastUpdateBalance))).toFixed(4), realTimeIndRound : _realTimeIndRound, realTimeBalance : parseFloat(caver.utils.convertFromPeb(caver.utils.toBN(_realTimeBalance))).toFixed(4)};
+            console.log()
             setIndInfo(IndInfo);
-            console.log(indInfo)
+
         } catch(error) {
             console.log(error)
         }
@@ -66,11 +81,45 @@ export const Provider = ({ children }) => {
             console.log(error)
         }
     }
+    const stake = async () => {
+        try{
+            if(!window.klaytn) return alert('Please install Kaikas')
+            const stakingContract = createStakingContract();
+            const stake = await stakingContract.methods.deposit(caver.utils.convertToPeb(String(stakeAmount), 'KLAY')).send({from:window.klaytn.selectedAddress, gas:'2000000'})
+            getGenInfo();
+            getIndInfo();
+        } catch(error) {
+            console.log(error)
+        }
+    }
+    const getMyBalance = async () => {
+        try{
+            if(!window.klaytn) return alert('Please install Kaikas')
+            const tokenContract = createTokenContract();
+            const balance = await tokenContract.methods.balanceOf(window.klaytn.selectedAddress).call()
+            setMyBalance(parseFloat(caver.utils.convertFromPeb(caver.utils.toBN(balance))).toFixed(4))
+            setMyRealBalance(balance/1000000000000000000)
+        } catch(error) {
+            console.log(error)
+        }
+    }
+    const approve = async () => {
+        try{
+            if(!window.klaytn) return alert('Please install Kaikas')
+            const tokenContract = createTokenContract();
+            
+            const token = await tokenContract.methods.approve(stakingContractAddress, "1000000000000000000000000000000000000000").send({from:window.klaytn.selectedAddress, gas:'2000000'})
+        
+        } catch(error) {
+            console.log(error)
+        }
+    }
     useEffect(() => {
         checkIfWalletIsConnect();
         getIndInfo();
         getGenInfo();
-      }, []);
+        getMyBalance();
+      }, [currentAccount]);
 
       return (
         <Context.Provider
@@ -79,6 +128,13 @@ export const Provider = ({ children }) => {
            currentAccount,
            genInfo,
            indInfo,
+           onChangeStakeAmount,
+           stake,
+           stakeAmount,
+           approve,
+           myBalance,
+           setStakeAmount,
+           myRealBalance,
           }}
         >
           {children}
